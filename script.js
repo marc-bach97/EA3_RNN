@@ -9,7 +9,7 @@ let lstm_tokenizer=null;
 
 // Wait for TensorFlow.js to be ready
 tf.ready().then(() => {
-    $.getJSON('/models/ffnn/model_variables.json', function(data) {         
+    $.getJSON('models/ffnn/model_variables.json', function(data) {         
       tokenizerIndexWordFFNN=JSON.parse(data["tokenizerWordIndex"])['config']['index_word'];
       tokenizerIndexWordFFNN=JSON.parse(tokenizerIndexWordFFNN);
       tokenizerWordIndexFFNN=JSON.parse(data["tokenizerWordIndex"])['config']['word_index'];
@@ -22,7 +22,7 @@ tf.ready().then(() => {
         }
 
       });
-$.getJSON('/models/lstm/model_variables.json', function(data) {         
+$.getJSON('models/lstm/model_variables.json', function(data) {         
     tokenizerIndexWordLSTM=JSON.parse(data["tokenizerWordIndex"])['config']['index_word'];
     tokenizerIndexWordLSTM=JSON.parse(tokenizerIndexWordLSTM);
     tokenizerWordIndexLSTM=JSON.parse(data["tokenizerWordIndex"])['config']['word_index'];
