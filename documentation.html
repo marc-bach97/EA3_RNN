@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dokumentation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+    <!-- Import TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+    <!-- Import tfjs-vis -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js"></script>
+    <style>
+      .modal-header,.modal-footer{
+          padding: 5px 15px;
+      }
+      .form-label{
+        margin-bottom: 2px;
+      }
+      .hidden_layer_item{
+        padding: 5px;
+        width: 100%;
+      }
+      .icn-spinner {
+        animation: spin-animation 1s infinite;
+        display: inline-block;
+      }
+
+      @keyframes spin-animation {
+        0% {
+          transform: rotate(0deg);
+          animation-timing-function: linear;
+
+        }
+        100% {
+          transform: rotate(359deg);
+        }
+      }
+      #input_graph,#training_graph,#testing_graph{
+        height: 250px;
+        width: 100%;
+      }
+      .subsurface-title {
+        display: none;
+      }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Tenth navbar example">
+        <div class="container-fluid">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+    
+          <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08">
+            <ul class="navbar-nav">
+              <li class="nav-item btn">
+                <a class="nav-link " aria-current="page" href="index.html">Wortvorhersage</a>
+              </li>
+              <li class="nav-item btn">
+                <a class="nav-link" href="results.html">Modellierung und Ergebnisse</a>
+              </li>
+              <li class="nav-item btn active">
+                <a class="nav-link" href="documentation.html">Dokumentation</a>
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+    </nav>
+    <div class="container">
+      <br>
+      <h3>#Interaktionen</h3>
+      <ul>
+        <li>Wortvorhersage: Die Wortvorhersageseite enthält zwei Abschnitte, den linken für FFNN und den rechten für RNN.
+          <br> Um das nächste Wort vorherzusagen, müssen Sie ein Wort oder einen Satz schreiben und dann Leerzeichen eingeben (Sie können die Ergebnisse der beiden verschiedenen Modelle vergleichen).
+          <br> Sie haben die Möglichkeit, die am häufigsten vorhergesagten Wörter (5, 10 und 20) anzuzeigen.
+          <br> Die Modelle generieren auch weitere Wörter basierend auf dem von Ihnen eingegebenen Text. Sie fügen dem von Ihnen eingegebenen Text fünf zusätzliche Wörter hinzu. Diese Wörter werden einzeln generiert und jedes Wort wirkt sich auf das nächste Wort aus
+        </li>
+      </ul>
+
+      <h3>#Datensatz</h3>
+      <div class="card" style="width: 100%;">
+        <div class="card-body">
+          <h4 class="card-title">The Jungle Book By Rudyard Kipling</h4>
+          <p class="card-text">
+            The Jungle Book <a href="https://www.gutenberg.org/ebooks/236" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+              </svg></a> 
+              ist eine Sammlung von Geschichten von Rudyard Kipling. Das Buch wurde erstmals 1894 veröffentlicht und spielt im Dschungel Indiens. Es ist ein klassisches Werk der Literatur, das für seine lebendigen Charaktere und fantasievollen Geschichten berühmt geworden ist.<br>
+
+              Die Geschichten im The Jungle Book drehen sich hauptsächlich um die Abenteuer von Mowgli, einem kleinen Jungen, der im Dschungel von Wölfen aufgezogen wird. Mowgli interagiert mit verschiedenen Tieren, darunter dem weisen Panther Bagheera, dem Bären Balu und dem bedrohlichen Tiger Shere Khan. In jeder Geschichte geht es um Themen wie Freundschaft, Überleben und das Gleichgewicht zwischen Mensch und Natur.
+
+              <br> The Jungle Book wurde im Laufe der Jahre in zahlreichen Filmen, Fernsehserien und Bühnenproduktionen adaptiert und ist damit ein weithin anerkanntes und beliebtes literarisches Werk.
+              <br>Der Gesamttext umfasst etwa <strong>50,800 Wörter</strong>  und enthält etwa <strong> 5,060 einzigartige Wörter</strong>.
+          </p>
+        </div>
+      </div>
+      <br>
+      <h3>#Tools und Software</h3>
+      <div class="card" style="width: 100%;">
+        <div class="card-body">
+          <h4 class="card-title">TensorFlow.js</h4>
+          <p class="card-text">
+            TensorFlow.js <a href="https://www.tensorflow.org/js/guide" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+              </svg></a> ist eine Open-Source-Bibliothek, die es Entwicklern ermöglicht, Maschinenlernmodelle direkt im Browser oder auf Node.js zu definieren, zu trainieren und auszuführen. Es handelt sich um eine Erweiterung des TensorFlow-Frameworks, das entwickelt wurde, um die Möglichkeiten des Maschinenlernens für JavaScript-Entwickler zugänglich zu machen. TensorFlow.js ermöglicht die Erstellung von Maschinenlernmodellen für verschiedene Aufgaben, einschließlich Bild- und Spracherkennung, natürlicher Sprachverarbeitung und mehr.            <br>
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="card" style="width: 100%;">
+        <div class="card-body">
+          <h4 class="card-title">Bootstrap </h4>
+          <p class="card-text">
+            Bootstrap 
+            <a href="https://getbootstrap.com/docs/4.6/getting-started/introduction/" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+              </svg></a>
+              ist ein weit verbreitetes Open-Source-Front-End-Framework zur Entwicklung von ansprechenden und mobilen Webanwendungen. Von Twitter entwickelt, bietet Bootstrap eine Sammlung vordefinierter HTML-, CSS- und JavaScript-Komponenten, die Entwicklern dabei helfen, konsistente und visuell ansprechende Benutzeroberflächen zu erstellen.            
+            <br>
+          </p>
+        </div>
+      </div>
+      <br>
+      <div class="card" style="width: 100%;">
+        <div class="card-body">
+          <h4 class="card-title">Google Colab </h4>
+          <p class="card-text">
+            Google Colab 
+            <a href="https://colab.research.google.com/" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5"/>
+                <path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z"/>
+              </svg></a>
+              Google Colab, kurz für Google Colaboratory, ist eine kostenlose, cloudbasierte Plattform von Google, die es Ihnen ermöglicht, Python-Code in einer webbasierten interaktiven Umgebung zu schreiben und auszuführen. Colab ist in den Bereichen Datenwissenschaft und maschinelles Lernen aufgrund seiner Integration mit beliebten Bibliotheken wie TensorFlow und PyTorch besonders beliebt.
+            <br>
+          </p>
+        </div>
+      </div>
+      <br>
+
+        
+  </div>
+  
+ 
+
+
+
+ 
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+<script src="training.js"></script>
+</body>
+</html>

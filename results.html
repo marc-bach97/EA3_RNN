@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Results</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+    <!-- Import TensorFlow.js -->
+    <!-- Import tfjs-vis -->
+    <style>
+      .modal-header,.modal-footer{
+          padding: 5px 15px;
+      }
+      .form-label{
+        margin-bottom: 2px;
+      }
+      .hidden_layer_item{
+        padding: 5px;
+        width: 100%;
+      }
+      .icn-spinner {
+        animation: spin-animation 1s infinite;
+        display: inline-block;
+      }
+
+      @keyframes spin-animation {
+        0% {
+          transform: rotate(0deg);
+          animation-timing-function: linear;
+
+        }
+        100% {
+          transform: rotate(359deg);
+        }
+      }
+      #input_graph,#training_graph,#testing_graph{
+        height: 250px;
+        width: 100%;
+      }
+      .subsurface-title {
+        display: none;
+      }
+      .nav-tabs .nav-link{
+        width: 50%;
+      }
+    </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="Tenth navbar example">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample08" aria-controls="navbarsExample08" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-md-center" id="navbarsExample08">
+        <ul class="navbar-nav">
+          <li class="nav-item btn">
+            <a class="nav-link " aria-current="page" href="index.html">Wortvorhersage</a>
+          </li>
+          <li class="nav-item btn active">
+            <a class="nav-link" href="results.html">Modellierung und Ergebnisse</a>
+          </li>
+          <li class="nav-item btn ">
+            <a class="nav-link" href="documentation.html">Dokumentation</a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+</nav>
+    <div class="container">
+      <br>
+      <div class="row">
+        <p class="h2"><strong>#</strong>Feed-Forward Neural Network (FFNN) mit einem Zeitfenster</p>
+      </div>
+      <br>
+        
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="row ">
+            <p class="h4"><strong>#</strong>Data Preprocessing </p>
+           
+          </div>
+            <p>
+              <ol>
+                <li>Die TXT-Datei wird gelesen und alle Sonderzeichen entfernt</li>
+                 <li>Verwenden Sie Tokenizer, um Text in einzelne Einheiten zu zerlegen</li>
+                 <li>Erstellen einer N-Gramm-Sequenz mit einem Zeitfenster von 3</li>
+              </ol>
+            </p>
+        </div>
+        <div class="col-sm-6">
+          <div class="row ">
+            <p class="h4"><strong>#</strong>Erstellen des Modells</p>
+           
+          </div>
+            <p>
+              <code>
+                model = tf.keras.Sequential([
+                    tf.keras.layers.Embedding(input_dim=total_words, output_dim=100, input_length=max_sequence_length - 1),
+                    tf.keras.layers.Flatten(),
+                    tf.keras.layers.Dense(128, activation='relu'),
+                    tf.keras.layers.Dense(total_words, activation='softmax')
+                ])
+                
+              </code>
+             
+            </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <img src="/models/ffnn/acuracy.png" style="width: 80%;" alt="">
+        </div>
+        <div class="col-sm-6">
+          <img src="/models/ffnn/loss.png" style="width: 80%;" alt="">
+        </div>
+      </div>
+
+      <div class="row">
+        <p class="h4"><strong>#</strong>Results</p>
+        <p>Wenn Sie das Modell testen und die Vorhersage bemerken, können Sie die zugehörige Vorhersage erkennen, die im Kontext des Absatzes oder Satzes logisch sein könnte. <br>
+          Um dies zu erreichen, können Sie versuchen, für FFNN und RNN die gleiche Wortfolge einzugeben und herauszufinden, was verwandt sein könnte und mit hoher Wahrscheinlichkeit in diesen Kontext kommt. <br>
+          Nachdem ich das FFNN mit mehreren Phrasen und einer Reihenfolge von Eingaben getestet hatte, fand ich die ungefähren Ergebnisse: <br>
+          <ul>
+            <li>Etwa 7 % der Top-1-Vorhersagen (K=1) beziehen sich auf den Kontext</li>
+             <li>Etwa 15 % der Top-5-Vorhersagen (K=5) beziehen sich auf den Kontext</li>
+             <li>Etwa 25 % der Top-5-Vorhersagen (K=10) beziehen sich auf den Kontext</li>
+             <li>Etwa 40 % der Top-5-Vorhersagen (K=20) beziehen sich auf den Kontext</li>
+          </ul>
+        </p>
+      </div>
+     
+      <br>
+      <div class="row">
+        <p class="h2"><strong>#</strong>Recurrent Neural Network (RNN) using LSTM</p>
+      </div>
+      <br>
+        
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="row ">
+            <p class="h4"><strong>#</strong>Data Preprocessing </p>
+           
+          </div>
+            <p>
+              <ol>
+                <li>Die TXT-Datei wird gelesen und alle Sonderzeichen entfernt</li>
+                 <li>Verwenden Sie Tokenizer, um Text in einzelne Einheiten zu zerlegen</li>
+                 <li>Erstellen einer N-Gramm-Sequenz mit einem Zeitfenster von 3</li>
+              </ol>
+            </p>
+        </div>
+        <div class="col-sm-6">
+          <div class="row ">
+            <p class="h4"><strong>#</strong>Erstellen des Modells</p>
+           
+          </div>
+            <p>
+              <code>
+                model = tf.keras.Sequential([
+                    tf.keras.layers.Embedding(total_words, 100, input_length=max_sequence_length-1),
+                    tf.keras.layers.LSTM(100),
+                    tf.keras.layers.Dense(total_words, activation='softmax')
+                ])
+                
+              </code>
+             
+            </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <img src="/models/lstm/accuracy.png" style="width: 80%;" alt="">
+        </div>
+        <div class="col-sm-6">
+          <img src="/models/lstm/loss.png" style="width: 80%;" alt="">
+        </div>
+      </div>
+
+      <div class="row">
+        <p class="h4"><strong>#</strong>Results</p>
+        <p>Wenn Sie das Modell testen und die Vorhersage bemerken, können Sie die zugehörige Vorhersage erkennen, die im Kontext des Absatzes oder Satzes logisch sein könnte. <br>
+          Um dies zu erreichen, können Sie versuchen, für FFNN und RNN die gleiche Wortfolge einzugeben und herauszufinden, was verwandt sein könnte und mit hoher Wahrscheinlichkeit in diesen Kontext kommt. <br>
+          Nachdem ich das FFNN mit mehreren Phrasen und einer Reihenfolge von Eingaben getestet hatte, fand ich die ungefähren Ergebnisse:<br>
+          <ul>
+            <li>Etwa 5 % der Top-1-Vorhersagen (K=1) beziehen sich auf den Kontext</li>
+             <li>Etwa 20 % der Top-5-Vorhersagen (K=5) beziehen sich auf den Kontext</li>
+             <li>Etwa 30 % der Top-5-Vorhersagen (K=10) beziehen sich auf den Kontext</li>
+             <li>Etwa 40 % der Top-5-Vorhersagen (K=20) beziehen sich auf den Kontext</li>
+          </ul>
+        </p>
+      </div>
+     
+      <br>
+     
+      
+        
+  </div>
+  
+ 
+
+
+
+ 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Prediction</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis"></script> <!-- Add this line to load tfjs-vis -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+  <script>
+    // Declare variables outside the block
+    let tokenizerWordIndex;
+    let loadedMaxSequenceLength;
+    let model=null;
+    let maxSequenceLength = 4; // Set your desired max sequence length;
+
+    // Wait for TensorFlow.js to be ready
+    tf.ready().then(() => {
+        $.getJSON('/models/ffnn/model_variables.json', function(data) {         
+            tokenizerWordIndex=JSON.parse(data["tokenizerWordIndex"])['config']['index_word'];
+            tokenizerWordIndex=JSON.parse(tokenizerWordIndex)
+            loadedMaxSequenceLength = parseInt(data["maxSequenceLength"]);
+            init();
+            if (typeof tokenizerWordIndex === 'undefined') {
+        console.error('Error: tokenizerWordIndex is undefined');
+        return;
+      }
+
+    
+    
+
+});
+
+
+    }).catch((error) => {
+      console.error('Error loading TensorFlow.js:', error);
+    });
+
+    async function loadModel() {
+      try {
+        // Load the TensorFlow.js model
+        const model = await tf.loadLayersModel('models/ffnn/model.json');
+        return model;
+      } catch (error) {
+        console.error('Error loading TensorFlow.js model:', error);
+      }
+    }
+
+    
+
+    async function init() {
+      // Initialize the TensorFlow.js model
+      model = await loadModel();
+      await tf.ready();
+      
+    }
+
+    async function predictNextWord() {
+      if (!model) {
+        console.error('Model not loaded');
+        return;
+      }
+        // Get the list of layers in the model
+    
+
+      // Use the loaded model for predictions
+      const inputWord = document.getElementById('inputWord').value;
+      const sequence = [inputWord];
+
+      // Pad the sequence manually
+      const paddedSequence = padSequence(sequence, maxSequenceLength - 1);
+      console.log(paddedSequence);
+
+      const inputTensor = tf.tensor2d([paddedSequence]);
+      const predictions = model.predict(inputTensor);
+      console.log(predictions);
+
+    const predictions_data= predictions.dataSync();
+    const predictionsWithIndices = predictions_data.map((probability, index) => ({ probability, index }));
+
+    const sortedPredictions = predictionsWithIndices.sort((a, b) => b.probability - a.probability);
+
+    const top5 = sortedPredictions.slice(0, 5);
+    const top10 = sortedPredictions.slice(0, 10);
+    const top20 = sortedPredictions.slice(0, 20);
+    console.log(top10);
+
+      // Display predictions
+      const sorted_predictions = Array.from(predictions.dataSync())
+        .map((probability, index) => ({ index,word: tokenizerWordIndex[''+index], probability:probability }))
+        .sort((a, b) => b.probability - a.probability);
+        console.log(sorted_predictions);
+    }
+
+    function displayPredictions(top) {
+      
+    }
+
+    function padSequence(sequence, maxLength) {
+  if (sequence.length >= maxLength) {
+    // Truncate the sequence to maxLength elements
+    return sequence.slice(0, maxLength);
+  } else {
+    // Pad the sequence with zeros if it's shorter than maxLength
+    const padding = Array(maxLength - sequence.length).fill(0);
+    return padding.concat(sequence);
+  }
+}
+
+    // Call the init function when the page is loaded
+    
+  </script>
+</head>
+<body>
+  <div>
+    <label for="inputWord">Enter a word:</label>
+    <input type="text" id="inputWord">
+    <button onclick="predictNextWord()">Predict</button>
+  </div>
+
+  <div id="predictions">
+    <h3>Top 10 Predictions:</h3>
+    <ul id="predictionList"></ul>
+  </div>
+</body>
+</html>
